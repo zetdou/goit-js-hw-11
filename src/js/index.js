@@ -19,7 +19,8 @@ async function displayImages(query) {
     
         const images = await searchImages(query, page);
         images.forEach(image => {
-            const photoCard = document.createElement("div");
+            const photoCard = document.createElement("a");
+            photoCard.href = image.largeImageURL;
             photoCard.classList.add('photo-card');
             photoCard.innerHTML = `
                 <img src="${image.previewURL}" alt="${image.tags}" loading="lazy"/>
@@ -38,7 +39,7 @@ async function displayImages(query) {
             gallery.appendChild(endMessage);
         } else {
             page++;
-            loadMoreBtn.style.display = "block";
+            loadMoreBtn.style.display = "flex";
         }
         return images;
     } catch(error) {
@@ -53,6 +54,9 @@ searchForm.addEventListener("submit", async ev => {
     gallery.innerHTML = "";
     await displayImages(searchedData);
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images`);
+    const lightbox = new SimpleLightbox(".gallery a", {
+        captions: true,
+    });
 });
 
 loadMoreBtn.addEventListener("click", async () => {
